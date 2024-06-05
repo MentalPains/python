@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>US Stock Price</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            color: #333333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 350px;
+        }
+        h1, h2 {
+            color: #007bff;
+            margin-bottom: 1rem;
+        }
+        h2 {
+            font-size: 1.2rem;
+            color: #333333;
+        }
+        a {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+        }
+        a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% if tCode %}
+            <h1>Latest US Stock Price</h1>
+            <h2>US Stock Ticker: <span>{{ tCode }}</span></h2>
+            <h2>Closing Stock Price: <span>{{ sPrice }}</span></h2>
+            <h2>Closing Volume: <span>{{ cVolume }}</span></h2>
+            <h2>Date and Time: <span>{{ dTime }}</span></h2>
+            <a href="stock">Back to Stock</a>
+        {% else %}
+            <h1>No Price Data</h1>
+            <a href="stock">Back to Stock</a>
+        {% endif %}
+    </div>
+</body>
+</html>

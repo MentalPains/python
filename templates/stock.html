@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Latest US Stock Price</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            color: #333333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 350px;
+        }
+        h1 {
+            color: #007bff;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 0.5rem;
+            color: #555555;
+        }
+        input[type="text"], input[type="submit"] {
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            border: 2px solid transparent;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        input[type="text"] {
+            background-color: #f0f0f0;
+            color: #333333;
+        }
+        input[type="text"]:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        input[type="submit"] {
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        input[type="submit"]:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Check Latest US Stock Price</h1>
+        <form action="result" method="post">
+            <label for="stockSymbol">Stock Ticker</label>
+            <input type="text" id="stockSymbol" name="stockSymbol" value="MSFT">
+            <label for="APIKey">API Key</label>
+            <input type="text" id="APIKey" name="APIKey" value="3ebtJqSgXiAu8qbMvFUF3IroIixrLSAt">
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+</body>
+</html>

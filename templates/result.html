@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>US Stock ({{ tCode }})</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            color: #333333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 350px;
+        }
+        h1 {
+            color: #007bff;
+            margin-bottom: 1rem;
+        }
+        h2 {
+            color: #333333;
+            margin: 0.5rem 0;
+        }
+        h3 {
+            color: #555555;
+            margin: 0.5rem 0;
+        }
+        a {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: #007bff;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Latest US Stock Price</h1>
+        <h2>US Stock Ticker ({{ tCode }})</h2>
+        <h2>US Stock Price ({{ price }})</h2>
+        <h3>Date ({{ date }})</h3>
+        <h3>Time ({{ time }})</h3>
+        <a href="stock">Back to Stock</a>
+    </div>
+</body>
+</html>

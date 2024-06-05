@@ -1,0 +1,19 @@
+<html>
+  <head>
+    <title>Flask Intro - login page</title>
+  </head>
+  <body>
+      <h1>Please login!</h1>
+      <br>
+      <form action="home" method="post">
+        <input type="text" name="username" value="{{
+          request.form.username }}">
+         <input type="password" name="password" value="{{
+          request.form.password }}">
+        <input type="submit" value="Login">
+      </form>
+      {% if error %}
+        <p class="error"><strong>Error:</strong> {{ error }}
+      {% endif %}
+  </body>
+</html>

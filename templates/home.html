@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stock Trading Home</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f4f9;
+      color: #333333;
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar {
+      margin-bottom: 2rem;
+    }
+
+    .navbar-brand {
+      font-size: 1.5rem;
+      color: white !important;
+    }
+
+    .navbar-nav .nav-link {
+      color: rgba(255, 255, 255, 0.8) !important;
+    }
+
+    .navbar-nav .nav-link:hover {
+      color: white !important;
+    }
+
+    .hero-section {
+      background-image: linear-gradient(to left bottom, rgba(189, 195, 199, .75), rgba(44, 62, 80, .75)), url("{{ url_for('static', filename='1-glowing-green-stock-arrow-climbs-on-a-stock-screen.jpg') }}");
+      background-size: cover;
+      background-position: center;
+      padding: 5rem 0;
+      text-align: center;
+      color: white;
+    }
+
+    .hero-section h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .hero-section p {
+      font-size: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .hero-section .btn {
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+    }
+
+    .features-section {
+      padding: 3rem 0;
+    }
+
+    .features-section h1 {
+      margin-bottom: 2rem;
+    }
+
+    .features-section .feature {
+      margin-bottom: 2rem;
+    }
+
+    .carousel-section {
+      padding: 3rem 0;
+    }
+
+    .carousel-section h1 {
+      margin-bottom: 2rem;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <i class="fa fa-university"></i> StockTrader
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/stock">View Stocks</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Buy Stocks</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Sell Stocks</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Services</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">FAQ</a>
+          </li>
+        </ul>
+        <a class="btn btn-primary navbar-btn ml-md-2" href="#">Contact Us</a>
+      </div>
+    </div>
+  </nav>
+  <div class="hero-section">
+    <div class="container">
+      <h1>Welcome to StockTrader</h1>
+      <p>Join our platform to buy, sell, and view the latest stock prices. Empower your trading journey with real-time data and analytics.</p>
+      <a class="btn btn-outline-light mx-1" href="#">Get Started</a>
+      <a class="btn btn-primary mx-1" href="#">Learn More</a>
+    </div>
+  </div>
+  <div class="features-section text-center">
+    <div class="container">
+      <h1>Why Choose StockTrader?</h1>
+      <div class="row justify-content-center">
+        <div class="col-md-4 feature">
+          <i class="fa fa-3x mb-2 text-muted fa-line-chart"></i>
+          <h4>Real-Time Data</h4>
+          <p>Stay updated with the latest stock prices and market trends, all in real-time.</p>
+        </div>
+        <div class="col-md-4 feature">
+          <i class="fa fa-3x mb-2 text-muted fa-exchange"></i>
+          <h4>Easy Transactions</h4>
+          <p>Buying and selling stocks has never been easier with our user-friendly platform.</p>
+        </div>
+        <div class="col-md-4 feature">
+          <i class="fa fa-3x mb-2 text-muted fa-users"></i>
+          <h4>Expert Support</h4>
+          <p>Get assistance from our team of experts, ready to help you with your trading needs.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="py-3">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 text-center d-md-flex justify-content-between align-items-center">
+          <ul class="nav d-flex justify-content-center">
+            <li class="nav-item">
+              <a class="nav-link active" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Features</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Pricing</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">About</a>
+            </li>
+          </ul>
+          <p class="mb-0 py-1">© 2014-2018 Pingendo. All rights reserved</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+
+</html>
