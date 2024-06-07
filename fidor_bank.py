@@ -14,14 +14,14 @@ client_secret = "5ede13d54bc4c709c1c88725ab64dbbc"
 
 authorization_base_url = 'https://apm.tp.sandbox.fidorfzco.com/oauth/authorize'
 token_url = 'https://apm.tp.sandbox.fidorfzco.com/oauth/token'
-redirect_url = 'http://localhost:5000/callback'
+redirect_uri = 'http://localhost:5000/callback'
 
 @app.route('/', methods=["GET"])
 @app.route('/index', methods=["GET"])
 def default():
     try:
         # Step 1: User Application Authorization
-        fidor = OAuth2Session(client_id, redirect_url=redirect_url)
+        fidor = OAuth2Session(client_id, redirect_uri=redirect_uri)
         authorization_url, state = fidor.authorization_url(authorization_base_url)
         # State is used to prevent CSRF, keep this for later.
         session['oauth_state'] = state
@@ -38,7 +38,7 @@ def callback():
         fidor = OAuth2Session(state=session['oauth_state'])
         authorizationCode = request.args.get('code')
         body = 'grant_type=authorization_code&code=' + authorizationCode + \
-               '&redirect_url=' + redirect_url + '&client_id=' + client_id
+               '&redirect_uri=' + redirect_uri + '&client_id=' + client_id
         auth = HTTPBasicAuth(client_id, client_secret)
         token = fidor.fetch_token(token_url, auth=auth, code=authorizationCode, body=body, method='POST')
 
@@ -63,7 +63,10 @@ def services():
         print("Response status code:", response.status_code)
         print("Response text:", response.text)
 
-        if response.status_code == 200:
+        if response.status_code == 401:
+            print("Unauthorized token. Please re-authenticate.")
+            return redirect(url_for('default'))
+        elif response.status_code == 200:
             customersAccount = json.loads(response.text)
             print("customersAccount:", customersAccount)
             if 'data' in customersAccount and len(customersAccount['data']) > 0:
@@ -80,7 +83,7 @@ def services():
                 print("No account data found")
         else:
             print("Error fetching data from API:", response.text)
-        return render_template('services.html', error="No customer details found")
+            return render_template('services.html', error="No customer details found")
     except KeyError:
         print("Key error in services - returning to index")
         return redirect(url_for('default'))
@@ -129,11 +132,45 @@ def process():
         response = requests.request("POST", url, data=payload, headers=headers)
         print("process=" + response.text)
 
-        transactionDetails = json.loads(response.text)
-        return render_template('transfer_result.html', fTransactionID=transactionDetails["id"],
-                               custEmail=transactionDetails["receiver"], fRemarks=transactionDetails["subject"],
-                               famount=(float(transactionDetails["amount"]) / 100),
-                               fRecipientName=transactionDetails["recipient_name"])
+        transactionDetails = json.loads(response.text)  # Define transactionDetails here
+
+        if response.status_code == 401:
+            print("Unauthorized token. Please re-authenticate.")
+            return redirect(url_for('default'))
+        elif 'id' in transactionDetails:
+            session['fidor_customer'] = transactionDetails  # Update session with new transaction details
+            return render_template('transfer_result.html', fTransactionID=transactionDetails["id"],
+                                   custEmail=transactionDetails["receiver"], fRemarks=transactionDetails["subject"],
+                                   famount=(float(transactionDetails["amount"]) / 100),
+                                   fRecipientName=transactionDetails["recipient_name"])
+        else:
+            print("Error: 'id' not found in transaction details")
+            return render_template('transfer_result.html', error="Transaction failed. Please try again.")
+    
+@app.route("/transaction_history", methods=["GET"])
+def t_history():
+    if request.method == "GET":
+        token = session['oauth_token']
+        url = "https://api.tp.sandbox.fidorfzco.com/transactions"
+        headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/vnd.fidor.de; version=1, text/json',
+            'Authorization': "Bearer " + token["access_token"]
+        }
+        
+        response = requests.get(url, headers=headers)  # Add this line to define 'response'
+        print("history=" + response.text)
+
+        if response.status_code == 401:
+            print("Unauthorized token. Please re-authenticate.")
+            return redirect(url_for('default'))
+        elif response.status_code == 200:
+            transactionHistory = json.loads(response.text)
+            return render_template('transaction_history.html', len=len(transactionHistory["data"]),
+                                   fTransHistory=transactionHistory["data"])
+        else:
+            print("Error fetching data from API:", response.text)
+            return render_template('transaction_history.html', error="Failed to fetch transaction history.")
 
 if __name__ == '__main__':
     app.run(debug=True)

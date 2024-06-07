@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIDOR Bank Services - Transaction History</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            color: #333333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 600px;
+            max-height: 80vh; /* Adjust as needed */
+            overflow-y: auto;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        h1, h2, h3 {
+            color: #007bff;
+            margin-bottom: 1rem;
+        }
+        h3 {
+            font-size: 1rem;
+            color: #333333;
+        }
+        a {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+        }
+        a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% if fTransHistory %}
+            <img src="{{ url_for('static', filename='bank.png') }}" width="200" length="200">
+            {% for transaction in fTransHistory %}
+                <h2>Transaction ID: {{ transaction.id }}</h2>
+                <h3>SGD $ {{ '{:.2f}'.format(transaction.amount / 100) }} transferred to {{ transaction.transaction_type_details.remote_name }}</h3>
+                <h3>Recipient email: {{ transaction.transaction_type_details.recipient }}</h3>
+                <h3>Transfer Remark: {{ transaction.subject }}</h3>
+                <h3>Transfer Date: {{ transaction.updated_at }}</h3>
+                <br>
+            {% endfor %}
+            <a href="services">Back to Main Menu</a>
+        {% else %}
+            <h1>No transaction history details</h1>
+            <a href="index">Back to Index</a>
+        {% endif %}
+    </div>
+</body>
+</html>

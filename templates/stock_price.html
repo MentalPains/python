@@ -45,21 +45,65 @@
         a:hover {
             background-color: #0056b3;
         }
+        #cryptoChart {
+            width: 100%;
+            height: 400px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         {% if tCode %}
-            <h1>Latest US Stock Price</h1>
+            <h1>Latest US Crypto Price</h1>
             <h2>US Stock Ticker: <span>{{ tCode }}</span></h2>
             <h2>Closing Stock Price: <span>{{ sPrice }}</span></h2>
             <h2>Closing Volume: <span>{{ cVolume }}</span></h2>
             <h2>Date and Time: <span>{{ dTime }}</span></h2>
+            <h2>Stock Change %: <span>{{ stockChangePercent | round(2) }}%</span></h2>
+            <canvas id="cryptoChart"></canvas>
             <a href="stock">Check for another Crypto</a>
+            <a href="/">Go to Home</a>
         {% else %}
             <h1>No Price Data</h1>
             <a href="stock">Check for another Crypto</a>
+            <a href="/">Go to Home</a>
         {% endif %}
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <script>
+        const stockData = {{ stockData|tojson }};
+        const ctx = document.getElementById('cryptoChart').getContext('2d');
+
+        const labels = stockData.map(d => new Date(d.TIMESTAMP * 1000).toLocaleDateString());
+        const data = {
+            labels: labels,
+            datasets: [{
+                label: 'Closing Price',
+                data: stockData.map(d => d.CLOSE),
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1,
+                fill: false
+            }]
+        };
+
+        new Chart(ctx, {
+            type: 'line',
+            data: data,
+            options: {
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: 'day'
+                        }
+                    },
+                    y: {
+                        beginAtZero: false
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html>

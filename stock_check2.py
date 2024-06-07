@@ -1,9 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for
 import requests
 from datetime import datetime, timedelta
-import json
 
 app = Flask(__name__)
+
+CRYPTOCOMPARE_API_KEY = 'ee67c75d1b8879116e9502f34d5b1339fb9a3ecbc5df053eb0bc831ef1ef94d5'
+ALPHA_VANTAGE_API_KEY = 'WXU067FHBWX7OXQM'
 
 @app.route('/', methods=['GET'])
 def home():
@@ -16,29 +18,46 @@ def stock():
 @app.route('/result', methods=['POST'])
 def result():
     tickerCode = request.form['stockSymbol']
-    api_key = request.form['APIKey']
+    polygon_api_key = request.form['APIKey']
     from_date = datetime.now() - timedelta(days=7)
     to_date = datetime.now() - timedelta(days=1)
-    url = f"https://api.polygon.io/v2/aggs/ticker/X:{tickerCode}USD/range/1/day/{from_date.strftime('%Y-%m-%d')}/{to_date.strftime('%Y-%m-%d')}?adjusted=true&sort=asc&apiKey={api_key}"
     
-    response = requests.get(url)
-    if response.status_code == 200:
-        stockData = response.json()
-        if "results" in stockData and len(stockData["results"]) > 0:
-            latestStockPrice = stockData["results"][-1]
-            closingStockPrice = latestStockPrice["c"]
-            volume = int(latestStockPrice["v"])
-            stockDate = datetime.fromtimestamp(float(latestStockPrice["t"]) / 1000.0)
+    polygon_url = f"https://api.polygon.io/v2/aggs/ticker/X:{tickerCode}USD/range/1/day/{from_date.strftime('%Y-%m-%d')}/{to_date.strftime('%Y-%m-%d')}?adjusted=true&sort=asc&apiKey={polygon_api_key}"
+    cryptocompare_url = f"https://data-api.cryptocompare.com/index/cc/v1/historical/days?market=cadli&instrument={tickerCode}-USD&limit=7&api_key={CRYPTOCOMPARE_API_KEY}"
+    
+    polygon_response = requests.get(polygon_url)
+    cryptocompare_response = requests.get(cryptocompare_url)
+
+    if polygon_response.status_code == 200 and cryptocompare_response.status_code == 200:
+        stockDataPolygon = polygon_response.json()
+        stockDataCryptoCompare = cryptocompare_response.json()
+        
+        if "results" in stockDataPolygon and len(stockDataPolygon["results"]) > 0 and "Data" in stockDataCryptoCompare and len(stockDataCryptoCompare["Data"]) > 0:
+            latestStockPricePolygon = stockDataPolygon["results"][-1]
+            closingStockPricePolygon = latestStockPricePolygon["c"]
+            volumePolygon = int(latestStockPricePolygon["v"])
+            stockDatePolygon = datetime.fromtimestamp(float(latestStockPricePolygon["t"]) / 1000.0)
+
+            # Calculate stock change percentage from CryptoCompare data
+            latestStockDataCryptoCompare = stockDataCryptoCompare["Data"][-1]
+            closingStockPriceCryptoCompare = latestStockDataCryptoCompare["CLOSE"]
+            openingStockPriceCryptoCompare = stockDataCryptoCompare["Data"][0]["OPEN"]
+            volumeCryptoCompare = int(latestStockDataCryptoCompare["VOLUME"])
+            stockDateCryptoCompare = datetime.fromtimestamp(float(latestStockDataCryptoCompare["TIMESTAMP"]))
+
+            stockChangePercent = ((closingStockPriceCryptoCompare - openingStockPriceCryptoCompare) / openingStockPriceCryptoCompare) * 100
+            
             return render_template('stock_price.html', tCode=tickerCode,
-                                   sPrice=f'USD {closingStockPrice:,.2f}',
-                                   cVolume=f'{volume:,}', dTime=stockDate)
+                                   sPrice=f'USD {closingStockPricePolygon:,.2f}',
+                                   cVolume=f'{volumePolygon:,}', dTime=stockDatePolygon,
+                                   stockData=stockDataCryptoCompare["Data"], apiKey=polygon_api_key,
+                                   stockChangePercent=stockChangePercent)
         else:
             error = "No results found for the given cryptocurrency."
             return render_template('stock.html', error=error)
     else:
         error = "Error fetching data from API."
         return render_template('stock.html', error=error)
-
 
 @app.route('/buy_crypto', methods=['GET', 'POST'])
 def buy_crypto():
@@ -93,6 +112,31 @@ def sell_crypto():
             error = "Error fetching data from API."
             return render_template('sell_crypto.html', error=error)
     return render_template('sell_crypto.html')
+
+@app.route('/convert', methods=['GET', 'POST'])
+def convert():
+    if request.method == 'POST':
+        from_currency = request.form['fromCurrency']
+        to_currency = request.form['toCurrency']
+        amount = float(request.form['amount'])
+        
+        url = f"https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency={from_currency}&to_currency={to_currency}&apikey={ALPHA_VANTAGE_API_KEY}"
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            if "Realtime Currency Exchange Rate" in data:
+                exchange_rate = float(data["Realtime Currency Exchange Rate"]["5. Exchange Rate"])
+                converted_amount = amount * exchange_rate
+                return render_template('convert_result.html', from_currency=from_currency, to_currency=to_currency,
+                                       amount=amount, converted_amount=converted_amount, exchange_rate=exchange_rate)
+            else:
+                error = "Error fetching exchange rate."
+                return render_template('convert.html', error=error)
+        else:
+            error = "Error fetching data from API."
+            return render_template('convert.html', error=error)
+    return render_template('convert.html')
+
 
 @app.route('/services', methods=['GET'])
 def services():

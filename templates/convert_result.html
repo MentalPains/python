@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>US Stock ({{ tCode }})</title>
+    <title>Conversion Result</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -26,15 +26,9 @@
         }
         h1 {
             color: #007bff;
-            margin-bottom: 1rem;
         }
-        h2 {
+        p {
             color: #333333;
-            margin: 0.5rem 0;
-        }
-        h3 {
-            color: #555555;
-            margin: 0.5rem 0;
         }
         a {
             display: inline-block;
@@ -42,8 +36,8 @@
             padding: 0.5rem 1rem;
             background-color: #007bff;
             color: white;
-            border-radius: 6px;
             text-decoration: none;
+            border-radius: 6px;
             transition: background-color 0.3s ease;
         }
         a:hover {
@@ -53,12 +47,11 @@
 </head>
 <body>
     <div class="container">
-        <h1>Latest US Crypto Price</h1>
-        <h2>US Crypto Ticker ({{ tCode }})</h2>
-        <h2>US Crypto Price ({{ price }})</h2>
-        <h3>Date ({{ date }})</h3>
-        <h3>Time ({{ time }})</h3>
-        <a href="stock">Back to Crypto</a>
+        <h1>Conversion Result</h1>
+        <p>{{ amount }} {{ from_currency }} is equal to {{ converted_amount }} {{ to_currency }}</p>
+        <p>Exchange Rate: {{ exchange_rate }}</p>
+        <a href="/convert">Convert Another Currency</a>
+        <a href="/">Go to Home</a>
     </div>
 </body>
 </html>
